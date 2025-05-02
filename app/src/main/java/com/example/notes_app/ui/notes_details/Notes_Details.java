@@ -2,6 +2,8 @@ package com.example.notes_app.ui.notes_details;
 
 import static android.content.ContentValues.TAG;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -61,16 +63,39 @@ public class Notes_Details extends AppCompatActivity {
                     );
                     cardParams.setMargins(16, 16, 16, 16);
                     cardView.setLayoutParams(cardParams);
+                    cardView.setRadius(16);
+                    cardView.setCardElevation(8);
+                    cardView.setCardBackgroundColor(Color.WHITE);
                     LinearLayout ll = new LinearLayout(this);
                     ll.setOrientation(LinearLayout.VERTICAL);
+                    ll.setPadding(32, 32, 32, 32);
+                    ll.setBackgroundColor(Color.WHITE);
+                    ll.setOrientation(LinearLayout.VERTICAL);
                     TextView title = new TextView(this);
+                    title.setTextColor(Color.parseColor("#6200EE")); // purple_700
+                    title.setTextSize(20);
+                    title.setTypeface(null, Typeface.BOLD);
+//                    title.setGravity(Gravity.START);
+                    View divider = new View(this);
+                    LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            2
+                    );
+                    dividerParams.setMargins(0, 16, 0, 16);
+                    divider.setLayoutParams(dividerParams);
+                    divider.setBackgroundColor(Color.parseColor("#BB86FC")); // purple_200
+
                     title.setGravity(Gravity.CENTER);
                     title.setText(isSuccess.get(i).getTitle());
                     title.setTextSize(25);
                     TextView content = new TextView(this);
                     content.setGravity(Gravity.CENTER);
+                    content.setTextColor(Color.BLACK);
+                    content.setTextSize(16);
+                    content.setGravity(Gravity.CENTER);
                     content.setText(isSuccess.get(i).getContent());
                     ll.addView(title);
+                    ll.addView(divider);
                     ll.addView(content);
                     cardView.addView(ll);
                     fl.addView(cardView);
@@ -90,16 +115,39 @@ public class Notes_Details extends AppCompatActivity {
                 );
                 cardParams.setMargins(16, 16, 16, 16);
                 cardView.setLayoutParams(cardParams);
+                cardView.setRadius(16);
+                cardView.setCardElevation(8);
+                cardView.setCardBackgroundColor(Color.WHITE);
                 LinearLayout ll = new LinearLayout(this);
                 ll.setOrientation(LinearLayout.VERTICAL);
+                ll.setPadding(32, 32, 32, 32);
+                ll.setBackgroundColor(Color.WHITE);
+                ll.setOrientation(LinearLayout.VERTICAL);
                 TextView title = new TextView(this);
+                title.setTextColor(Color.parseColor("#6200EE")); // purple_700
+                title.setTextSize(20);
+                title.setTypeface(null, Typeface.BOLD);
+//                    title.setGravity(Gravity.START);
+                View divider = new View(this);
+                LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        2
+                );
+                dividerParams.setMargins(0, 16, 0, 16);
+                divider.setLayoutParams(dividerParams);
+                divider.setBackgroundColor(Color.parseColor("#BB86FC")); // purple_200
+
                 title.setGravity(Gravity.CENTER);
                 title.setText(isSuccess.getTitle());
                 title.setTextSize(25);
                 TextView content = new TextView(this);
                 content.setGravity(Gravity.CENTER);
+                content.setTextColor(Color.BLACK);
+                content.setTextSize(16);
+                content.setGravity(Gravity.CENTER);
                 content.setText(isSuccess.getContent());
                 ll.addView(title);
+                ll.addView(divider);
                 ll.addView(content);
                 cardView.addView(ll);
                 fl.addView(cardView);
