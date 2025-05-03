@@ -24,6 +24,10 @@ public class NotesDetailsViewModel extends AndroidViewModel {
     private final MutableLiveData<Note> createNoteResult = new MutableLiveData<>();
     private final MutableLiveData<List<Note>> NoteResult = new MutableLiveData<>();
 
+    private final MutableLiveData<Note> deleteNote = new MutableLiveData<>();
+
+    private final MutableLiveData<Boolean> updateNote = new MutableLiveData<>();
+
     private  final NotesDetailsRepository notesDetailsRepository;
     public NotesDetailsViewModel(@NonNull Application application) {
         super(application);
@@ -34,9 +38,15 @@ public class NotesDetailsViewModel extends AndroidViewModel {
         return createNoteResult;
     };
 
+    LiveData<Boolean> getUpdateNote(){return updateNote;};
+
     LiveData<List<Note>> getNoteResult(){
       return NoteResult;
     };
+
+    LiveData<Note> getDeleteNote(){
+        return deleteNote;
+    }
 
     public void createNote(String title, String content, Date time, Long userId){
         Note mynote = notesDetailsRepository.createNote(title,content,time,userId);
@@ -57,4 +67,25 @@ public class NotesDetailsViewModel extends AndroidViewModel {
             NoteResult.setValue(myNotes);
         }
     }
+
+    public void deleteNoteMethod(String title){
+        Note note = notesDetailsRepository.deleteNote(title);
+        if(note!=null){
+            deleteNote.setValue(note);
+        }
+        else{
+            deleteNote.setValue(null);
+        }
+
+    }
+    public void editNoteMethod(Long id,String content,String title){
+        Note Editednote = notesDetailsRepository.editNote(id,content,title);
+        if(Editednote!=null){
+            updateNote.setValue(true);
+        }
+        else {
+            updateNote.setValue(false);
+        }
+    }
+
 }

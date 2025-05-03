@@ -1,6 +1,7 @@
 package com.example.notes_app.ui.notes_details;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,19 +37,56 @@ public class AddNoteFragment extends DialogFragment {
         et1 = view.findViewById(R.id.ContentEditText);
         Btn = view.findViewById(R.id.AddNoteBtn);
 
+        Long id = 0L;
+
+        Bundle args = getArguments();
+        if (args!=null){
+            id = args.getLong("id",0L);
+            String title = args.getString("title", "");
+            String content = args.getString("content", "");
+            et.setText(title);
+            et1.setText(content);
+            Btn.setText("Edit");
+        }
 
 
-        Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String title = et.getText().toString().trim();
-                String Content = et1.getText().toString().trim();
-                Date time = new Date();
-                Long userId = 15L;
-                notesDetailsViewModel.createNote(title,Content,time,userId);
-                dismiss();
-            }
-        });
+
+
+
+        if(Btn.getText().toString().trim().equals("Add")){
+            Btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String title = et.getText().toString().trim();
+                    String Content = et1.getText().toString().trim();
+                    Date time = new Date();
+                    Long userId = 15L;
+                    notesDetailsViewModel.createNote(title,Content,time,userId);
+                    dismiss();
+                }
+            });
+        }
+
+        if(Btn.getText().toString().trim().equals("Edit")){
+            Long finalId = id;
+                 Btn.setOnClickListener(new View.OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    Log.d("TAG", "onClick: ");
+                    String content = et1.getText().toString().trim();
+                    String title = et.getText().toString().trim();
+                    notesDetailsViewModel.editNoteMethod(finalId,content,title);
+                    dismiss();
+
+                }
+
+
+            });
+
+        }
+
         return view;
     }
 }

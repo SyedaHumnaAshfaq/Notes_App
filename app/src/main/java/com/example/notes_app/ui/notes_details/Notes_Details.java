@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +45,7 @@ public class Notes_Details extends AppCompatActivity {
         fl = findViewById(R.id.LinearLayout);
 
 
+        //setting addbutton click listener
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,11 +54,12 @@ public class Notes_Details extends AppCompatActivity {
             }
         });
         notesDetailsViewModel.getNoteResult().observe(this,isSuccess->{
-            Log.d("NoteListSize", "Size: " + isSuccess.size());
-            if(!isSuccess.isEmpty()){
+            fl.removeAllViews(); // 👈 clear existing cards before re-adding updated ones
+            //getting all notes
+            if(isSuccess!=null && !isSuccess.isEmpty()){
                 Log.d(TAG, "onCreate: ");
                 for(int i = 0;i<isSuccess.size();i++){
-//                    Log.d(TAG, "onCreate: cardViewiew");
+                    //card for each note
                     CardView cardView = new CardView(this);
                     CardView.LayoutParams cardParams = new CardView.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -68,14 +72,80 @@ public class Notes_Details extends AppCompatActivity {
                     cardView.setCardBackgroundColor(Color.WHITE);
                     LinearLayout ll = new LinearLayout(this);
                     ll.setOrientation(LinearLayout.VERTICAL);
+
+
+                    //layout to hold edit and delete buttons
+                    LinearLayout horizontalLayout = new LinearLayout(this);
+                    horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    ll.addView(horizontalLayout);
+
+                    //adding edit button
+                    ImageButton editBtn = new ImageButton(this);
+                    editBtn.setImageResource(R.drawable.edit);
+                    LinearLayout.LayoutParams layoutParams_edit = new LinearLayout.LayoutParams(150,150);
+                    editBtn.setBackground(null);
+                    editBtn.setScaleType(ImageView.ScaleType.FIT_CENTER); // 👈 this makes the image fit without cropping
+                    editBtn.setAdjustViewBounds(true);
+                    editBtn.setLayoutParams(layoutParams_edit);
+                    horizontalLayout.addView(editBtn);
+
+                    //setting up click for edit
+                    int finalI1 = i;
+                    editBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            AddNoteFragment editNoteDialog = new AddNoteFragment();
+                            Bundle args = new Bundle();
+                            args.putString("title", isSuccess.get(finalI1).getTitle());
+                            args.putString("content", isSuccess.get(finalI1).getContent());
+                            args.putLong("id",isSuccess.get(finalI1).getId());
+                            editNoteDialog.setArguments(args);
+                            editNoteDialog.show(getSupportFragmentManager(), "Edit note");
+                        }
+
+                    });
+
+
+                    //adding delete button
+                    ImageButton deletebtn = new ImageButton(this);
+                    deletebtn.setImageResource(R.drawable.delete);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(150,150);
+                    deletebtn.setBackground(null);
+                    deletebtn.setScaleType(ImageView.ScaleType.FIT_CENTER); // 👈 this makes the image fit without cropping
+                    deletebtn.setAdjustViewBounds(true);
+                    deletebtn.setLayoutParams(layoutParams);
+                    deletebtn.setForegroundGravity(Gravity.END);
+
+                    //spacer for moving delete button to right
+                    View view = new View(this);
+                    LinearLayout.LayoutParams spacerParams = new LinearLayout.LayoutParams(0,0,1f);
+                    horizontalLayout.addView(view,spacerParams);
+                    horizontalLayout.addView(deletebtn);
+
+
+                    int finalI = i;
+
+                    //setting click for delete button
+                    deletebtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            notesDetailsViewModel.deleteNoteMethod(isSuccess.get(finalI).getTitle());
+                            cardView.setVisibility(View.GONE);
+                        }
+                    });
+
+
                     ll.setPadding(32, 32, 32, 32);
                     ll.setBackgroundColor(Color.WHITE);
                     ll.setOrientation(LinearLayout.VERTICAL);
+
+                    //adding title
                     TextView title = new TextView(this);
                     title.setTextColor(Color.parseColor("#6200EE")); // purple_700
                     title.setTextSize(20);
                     title.setTypeface(null, Typeface.BOLD);
-//                    title.setGravity(Gravity.START);
+
+                    //divide title and content
                     View divider = new View(this);
                     LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -88,6 +158,8 @@ public class Notes_Details extends AppCompatActivity {
                     title.setGravity(Gravity.CENTER);
                     title.setText(isSuccess.get(i).getTitle());
                     title.setTextSize(25);
+
+                    //adding content
                     TextView content = new TextView(this);
                     content.setGravity(Gravity.CENTER);
                     content.setTextColor(Color.BLACK);
@@ -106,6 +178,7 @@ public class Notes_Details extends AppCompatActivity {
         notesDetailsViewModel.getAllNotes();
 
         notesDetailsViewModel.getcreateNoteResult().observe(this, isSuccess ->{
+            //creating new note
 
             if(isSuccess!=null){
                 CardView cardView = new CardView(this);
@@ -119,6 +192,51 @@ public class Notes_Details extends AppCompatActivity {
                 cardView.setCardElevation(8);
                 cardView.setCardBackgroundColor(Color.WHITE);
                 LinearLayout ll = new LinearLayout(this);
+
+                //layout to hold edit and delete buttons
+                LinearLayout horizontalLayout = new LinearLayout(this);
+                horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+                ll.addView(horizontalLayout);
+
+                //adding edit button
+                ImageButton editBtn = new ImageButton(this);
+                editBtn.setImageResource(R.drawable.edit);
+                LinearLayout.LayoutParams layoutParams_edit = new LinearLayout.LayoutParams(150,150);
+                editBtn.setBackground(null);
+                editBtn.setScaleType(ImageView.ScaleType.FIT_CENTER); // 👈 this makes the image fit without cropping
+                editBtn.setAdjustViewBounds(true);
+                editBtn.setLayoutParams(layoutParams_edit);
+                horizontalLayout.addView(editBtn);
+
+
+
+                //adding delete button
+                ImageButton deletebtn = new ImageButton(this);
+                deletebtn.setImageResource(R.drawable.delete);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(150,150);
+                deletebtn.setBackground(null);
+                deletebtn.setScaleType(ImageView.ScaleType.FIT_CENTER); // 👈 this makes the image fit without cropping
+                deletebtn.setAdjustViewBounds(true);
+                deletebtn.setLayoutParams(layoutParams);
+                deletebtn.setForegroundGravity(Gravity.END);
+
+                //spacer for moving delete button to right
+                View view = new View(this);
+                LinearLayout.LayoutParams spacerParams = new LinearLayout.LayoutParams(0,0,1f);
+                horizontalLayout.addView(view,spacerParams);
+                horizontalLayout.addView(deletebtn);
+
+
+
+
+                deletebtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        notesDetailsViewModel.deleteNoteMethod(isSuccess.getTitle());
+                        cardView.setVisibility(View.GONE);
+                    }
+                });
+
                 ll.setOrientation(LinearLayout.VERTICAL);
                 ll.setPadding(32, 32, 32, 32);
                 ll.setBackgroundColor(Color.WHITE);
@@ -156,5 +274,17 @@ public class Notes_Details extends AppCompatActivity {
                 Toast.makeText(Notes_Details.this,"Note with this title already exists",Toast.LENGTH_LONG).show();
             }
         });
+
+        notesDetailsViewModel.getUpdateNote().observe(this,isSuccess->{
+            Toast.makeText(this,"entering",Toast.LENGTH_LONG).show();
+            if(isSuccess!=null) {
+                fl.removeAllViews(); // 👈 clear existing cards before re-adding updated ones
+                notesDetailsViewModel.getAllNotes();
+            }
+
+        });
+
+
+
     }
 }

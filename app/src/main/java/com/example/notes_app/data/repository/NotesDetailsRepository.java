@@ -31,6 +31,18 @@ public class NotesDetailsRepository {
        List<Note> allNotes = noteDao.loadAll();
        return allNotes;
     }
+    public Note deleteNote(String title){
+        Note note = noteDao.queryBuilder().where(NoteDao.Properties.Title.eq(title)).unique();
+        noteDao.delete(note);
+        return note;
+    }
+    public Note editNote(Long id,String content,String title){
+        Note Mynote = noteDao.queryBuilder().where(NoteDao.Properties.Id.eq(id)).unique();
+        Mynote.setContent(content);
+        Mynote.setTitle(title);
+        noteDao.update(Mynote);
+        return Mynote;
+    }
 
 
 }
