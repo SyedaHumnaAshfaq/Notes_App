@@ -50,7 +50,7 @@ public class Notes_Details extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AddNoteFragment addNoteDialog = new AddNoteFragment();
-                addNoteDialog.show(getSupportFragmentManager(),"Add note");
+                addNoteDialog.show(getSupportFragmentManager(),"Add note"); //support because its backward compatible
             }
         });
         notesDetailsViewModel.getNoteResult().observe(this,isSuccess->{
